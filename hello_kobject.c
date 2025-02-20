@@ -4,15 +4,16 @@
 #include <linux/kobject.h>
 #include <linux/sysfs.h>
 
-static struct *kobject_hello;
+static struct kobject *kobject_hello;
 
 static int kobject_hello_init(void)
 {
-    kobject_hello =  kobject_create_and_add("hello", kobj_kernel);
+    kobject_hello =  kobject_create_and_add("hello", NULL);
     if(!kobj_hello)
     {
         return -ENOMEM;
     }
+
 }
 
 static void kobject_hello_exit(void)
