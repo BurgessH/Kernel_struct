@@ -19,6 +19,7 @@ static void kobject_hello_exit(void)
 {
     kobject_put(kobject_hello);
 }
+
 module_init(kobject_hello_init);
 module_exit(kobject_hello_exit);
 

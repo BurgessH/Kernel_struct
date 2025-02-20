@@ -22,7 +22,7 @@ struct kobject {
 	unsigned int uevent_suppress:1;
 };
 
-bai
+//*接口定义：
 struct kobject * __must_check kobject_create(void);
 struct kobject * __must_check kobject_create_and_add(const char *name, struct kobject *parent);
 
