@@ -42,7 +42,7 @@ static ssize_t hello_buf_store(struct kobject *kobj, struct kobj_attribute *attr
 static struct kobj_attribute foo_attribute = __ATTR(buf, 0644, hello_buf_show, hello_buf_store);
 
 static struct kobject *kobject_hello;
-
+static struct kobject *kobject_child;
 
 static int kobject_hello_init(void)
 {
@@ -60,6 +60,8 @@ static int kobject_hello_init(void)
         kobject_put(kobject_hello);
         return -1;
     }
+    printk("kobject_hello.refcount = %d\n", kobject_hello->kref.refcount.refs.counter);
+
 
     reval = sysfs_create_file(kobject_hello, &value_attribute.attr);
     if(reval)
@@ -68,13 +70,26 @@ static int kobject_hello_init(void)
         kobject_put(kobject_hello);
         return -1;
     }
+    printk("kobject_hello.refcount = %d\n", kobject_hello->kref.refcount.refs.counter);
 
+    kobject_child = kobject_create_and_add("child", kobject_hello);
+    if(!kobject_child)
+    {
+        printk(KERNEL_ALERT "%s: sysfs create file failed\n", __func__ );
+        kobject_put(kobject_hello);
+        return -ENOMEM;
+    }
+
+    printk("kobject_hello.refcount = %d\n", kobject_hello->kref.refcount.refs.counter);
+    printk("kobject_hello.refcount = %d\n", kobject_child->kref.refcount.refs.counter);
+    
     return 0;
 }
 
 static void kobject_hello_exit(void)
 {
     kobject_put(kobject_hello);
+    kobject_put(kobject_child);
 }
 
 module_init(kobject_hello_init);
